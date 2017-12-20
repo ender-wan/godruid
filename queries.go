@@ -29,7 +29,8 @@ type QueryGroupBy struct {
 	Intervals        []string               `json:"intervals"`
 	Context          map[string]interface{} `json:"context,omitempty"`
 
-	QueryResult []GroupbyItem `json:"-"`
+	QueryResult     []GroupbyItem `json:"-"`
+	QueryResultData []byte        `json:"-"`
 }
 
 type GroupbyItem struct {
@@ -40,6 +41,7 @@ type GroupbyItem struct {
 
 func (q *QueryGroupBy) setup() { q.QueryType = "groupBy" }
 func (q *QueryGroupBy) onResponse(content []byte) error {
+	q.QueryResultData = content
 	res := new([]GroupbyItem)
 	err := json.Unmarshal(content, res)
 	if err != nil {
@@ -211,7 +213,8 @@ type QueryTopN struct {
 	Intervals        []string               `json:"intervals"`
 	Context          map[string]interface{} `json:"context,omitempty"`
 
-	QueryResult []TopNItem `json:"-"`
+	QueryResult     []TopNItem `json:"-"`
+	QueryResultData []byte     `json:"-"`
 }
 
 type TopNItem struct {
@@ -221,6 +224,7 @@ type TopNItem struct {
 
 func (q *QueryTopN) setup() { q.QueryType = "topN" }
 func (q *QueryTopN) onResponse(content []byte) error {
+	q.QueryResultData = content
 	res := new([]TopNItem)
 	err := json.Unmarshal(content, res)
 	if err != nil {
